@@ -19,7 +19,25 @@ return user && user.password === password;
 //only registered users can login
 regd_users.post("/login", (req,res) => {
   //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const { username, password } = req.body;
+
+  // Check if both username and password are provided
+  if (!username || !password) {
+    return res.status(400).json({ message: "Username and password are required." });
+  }
+
+  // Validate the user credentials
+  if (authenticatedUser(username, password)) {
+    // Create a JWT token
+    const accessToken = jwt.sign({ username }, "access", { expiresIn: "1h" });
+
+    // Save the JWT token in the session
+    req.session.authorization = { accessToken };
+
+    return res.status(200).json({ message: "User logged in successfully."});
+  } else {
+    return res.status(401).json({ message: "Invalid username or password." });
+  }
 });
 
 // Add a book review

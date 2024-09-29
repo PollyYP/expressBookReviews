@@ -21,7 +21,7 @@ public_users.post("/register", (req,res) => {
 
   // Add the new user to the users array
   users.push({ username, password });
-  
+  console.log(users);
   return res.status(300).json({message: "Successfully registered. Now you can login"});
 });
 
